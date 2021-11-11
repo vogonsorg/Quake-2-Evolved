@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/include/OpenAL
+END
+al.h
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/include/OpenAL/al.h
+END
+alc.h
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/include/OpenAL/alc.h
+END
+efx.h
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/include/OpenAL/efx.h
+END
+efx-creative.h
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/include/OpenAL/efx-creative.h
+END

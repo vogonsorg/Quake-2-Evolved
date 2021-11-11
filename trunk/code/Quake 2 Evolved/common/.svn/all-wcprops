@@ -1,0 +1,167 @@
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/!svn/ver/19/trunk/code/Quake%202%20Evolved/common
+END
+table.c
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/!svn/ver/18/trunk/code/Quake%202%20Evolved/common/table.c
+END
+common.c
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/!svn/ver/17/trunk/code/Quake%202%20Evolved/common/common.c
+END
+system.h
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/!svn/ver/17/trunk/code/Quake%202%20Evolved/common/system.h
+END
+fileSystem.h
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/!svn/ver/17/trunk/code/Quake%202%20Evolved/common/fileSystem.h
+END
+network.c
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/!svn/ver/17/trunk/code/Quake%202%20Evolved/common/network.c
+END
+editor.h
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/!svn/ver/19/trunk/code/Quake%202%20Evolved/common/editor.h
+END
+msgSystem.c
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/common/msgSystem.c
+END
+parser.c
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/!svn/ver/18/trunk/code/Quake%202%20Evolved/common/parser.c
+END
+table.h
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/common/table.h
+END
+common.h
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/!svn/ver/18/trunk/code/Quake%202%20Evolved/common/common.h
+END
+network.h
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/common/network.h
+END
+cvarSystem.c
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/!svn/ver/18/trunk/code/Quake%202%20Evolved/common/cvarSystem.c
+END
+msgSystem.h
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/common/msgSystem.h
+END
+parser.h
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/common/parser.h
+END
+cvarSystem.h
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/common/cvarSystem.h
+END
+protocol.h
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/!svn/ver/18/trunk/code/Quake%202%20Evolved/common/protocol.h
+END
+crc.c
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/!svn/ver/17/trunk/code/Quake%202%20Evolved/common/crc.c
+END
+cmdSystem.c
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/!svn/ver/19/trunk/code/Quake%202%20Evolved/common/cmdSystem.c
+END
+memory.c
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/common/memory.c
+END
+cmdSystem.h
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/!svn/ver/18/trunk/code/Quake%202%20Evolved/common/cmdSystem.h
+END
+memory.h
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/common/memory.h
+END
+fileFormats.h
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/!svn/ver/18/trunk/code/Quake%202%20Evolved/common/fileFormats.h
+END
+netChan.c
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/!svn/ver/17/trunk/code/Quake%202%20Evolved/common/netChan.c
+END
+fileSystem.c
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/!svn/ver/18/trunk/code/Quake%202%20Evolved/common/fileSystem.c
+END
+md4.c
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/common/md4.c
+END
+netChan.h
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/!svn/ver/17/trunk/code/Quake%202%20Evolved/common/netChan.h
+END
+pmove.c
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/common/pmove.c
+END

@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/!svn/ver/3/trunk/baseq2/ui/assets/quit_screen
+END
+quit.tga
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/!svn/ver/3/trunk/baseq2/ui/assets/quit_screen/quit.tga
+END
+accept_text.tga
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/!svn/ver/3/trunk/baseq2/ui/assets/quit_screen/accept_text.tga
+END
+cancel_text.tga
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/!svn/ver/3/trunk/baseq2/ui/assets/quit_screen/cancel_text.tga
+END
+quit_box.tga
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/!svn/ver/3/trunk/baseq2/ui/assets/quit_screen/quit_box.tga
+END
+quit_box_s.tga
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/!svn/ver/3/trunk/baseq2/ui/assets/quit_screen/quit_box_s.tga
+END

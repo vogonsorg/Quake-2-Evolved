@@ -1,0 +1,59 @@
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/!svn/ver/19/trunk/code/Quake%202%20Evolved/collision
+END
+cm_leaf.c
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/!svn/ver/19/trunk/code/Quake%202%20Evolved/collision/cm_leaf.c
+END
+cm_area.c
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/!svn/ver/19/trunk/code/Quake%202%20Evolved/collision/cm_area.c
+END
+cm_pvs.c
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/!svn/ver/18/trunk/code/Quake%202%20Evolved/collision/cm_pvs.c
+END
+cm_contents.c
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/!svn/ver/18/trunk/code/Quake%202%20Evolved/collision/cm_contents.c
+END
+cm_trace.c
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/!svn/ver/18/trunk/code/Quake%202%20Evolved/collision/cm_trace.c
+END
+cm_local.h
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/!svn/ver/19/trunk/code/Quake%202%20Evolved/collision/cm_local.h
+END
+cm_model.c
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/!svn/ver/18/trunk/code/Quake%202%20Evolved/collision/cm_model.c
+END
+cm_public.h
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/!svn/ver/19/trunk/code/Quake%202%20Evolved/collision/cm_public.h
+END
+cm_main.c
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/!svn/ver/18/trunk/code/Quake%202%20Evolved/collision/cm_main.c
+END

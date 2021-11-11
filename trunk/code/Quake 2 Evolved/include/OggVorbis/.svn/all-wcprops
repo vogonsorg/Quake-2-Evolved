@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/include/OggVorbis
+END
+ogg.h
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/include/OggVorbis/ogg.h
+END
+codec.h
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/include/OggVorbis/codec.h
+END
+vorbisfile.h
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/include/OggVorbis/vorbisfile.h
+END
+os_types.h
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/include/OggVorbis/os_types.h
+END

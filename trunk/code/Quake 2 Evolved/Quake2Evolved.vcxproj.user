@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LocalDebuggerWorkingDirectory>C:\Users\Kevin\Desktop\Quake2\</LocalDebuggerWorkingDirectory>
+    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+    <LocalDebuggerCommandArguments>+set s_skipSpatialization 1 +set com_developer 1 +set r_skipLightScissors 1 +set r_skipShadows 1 +set con_noNotify 0</LocalDebuggerCommandArguments>
+  </PropertyGroup>
+</Project>

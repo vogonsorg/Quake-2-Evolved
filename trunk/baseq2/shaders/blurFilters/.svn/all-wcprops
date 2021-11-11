@@ -1,0 +1,53 @@
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/!svn/ver/18/trunk/baseq2/shaders/blurFilters
+END
+blur17x17.vs
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/!svn/ver/18/trunk/baseq2/shaders/blurFilters/blur17x17.vs
+END
+blur17x17.fs
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/!svn/ver/18/trunk/baseq2/shaders/blurFilters/blur17x17.fs
+END
+blur9x9.vs
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/!svn/ver/18/trunk/baseq2/shaders/blurFilters/blur9x9.vs
+END
+blur9x9.fs
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/!svn/ver/18/trunk/baseq2/shaders/blurFilters/blur9x9.fs
+END
+blur13x13.fs
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/!svn/ver/18/trunk/baseq2/shaders/blurFilters/blur13x13.fs
+END
+blur13x13.vs
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/!svn/ver/18/trunk/baseq2/shaders/blurFilters/blur13x13.vs
+END
+blur5x5.vs
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/!svn/ver/18/trunk/baseq2/shaders/blurFilters/blur5x5.vs
+END
+blur5x5.fs
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/!svn/ver/18/trunk/baseq2/shaders/blurFilters/blur5x5.fs
+END

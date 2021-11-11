@@ -1,0 +1,161 @@
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/!svn/ver/19/trunk/code/Quake%202%20Evolved/ui
+END
+ui_mods.c
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/!svn/ver/17/trunk/code/Quake%202%20Evolved/ui/ui_mods.c
+END
+ui_controls.c
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/!svn/ver/18/trunk/code/Quake%202%20Evolved/ui/ui_controls.c
+END
+ui_menu.c
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/!svn/ver/19/trunk/code/Quake%202%20Evolved/ui/ui_menu.c
+END
+ui_advanced.c
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/ui/ui_advanced.c
+END
+ui_video.c
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/ui/ui_video.c
+END
+ui_multiplayer.c
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/!svn/ver/18/trunk/code/Quake%202%20Evolved/ui/ui_multiplayer.c
+END
+ui_demos.c
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/!svn/ver/17/trunk/code/Quake%202%20Evolved/ui/ui_demos.c
+END
+ui_defaults.c
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/ui/ui_defaults.c
+END
+ui_loadgame.c
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/!svn/ver/17/trunk/code/Quake%202%20Evolved/ui/ui_loadgame.c
+END
+ui_playersetup.c
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/!svn/ver/17/trunk/code/Quake%202%20Evolved/ui/ui_playersetup.c
+END
+ui_cinematics.c
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/!svn/ver/17/trunk/code/Quake%202%20Evolved/ui/ui_cinematics.c
+END
+ui_quit.c
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/ui/ui_quit.c
+END
+ui_public.h
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/ui/ui_public.h
+END
+ui_main.c
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/!svn/ver/19/trunk/code/Quake%202%20Evolved/ui/ui_main.c
+END
+ui_gameoptions.c
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/!svn/ver/18/trunk/code/Quake%202%20Evolved/ui/ui_gameoptions.c
+END
+ui_qmenu.c
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/!svn/ver/18/trunk/code/Quake%202%20Evolved/ui/ui_qmenu.c
+END
+ui_savegame.c
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/!svn/ver/17/trunk/code/Quake%202%20Evolved/ui/ui_savegame.c
+END
+ui_network.c
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/ui/ui_network.c
+END
+ui_options.c
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/ui/ui_options.c
+END
+ui_gotosite.c
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/ui/ui_gotosite.c
+END
+ui_credits.c
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/!svn/ver/18/trunk/code/Quake%202%20Evolved/ui/ui_credits.c
+END
+ui_singleplayer.c
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/!svn/ver/17/trunk/code/Quake%202%20Evolved/ui/ui_singleplayer.c
+END
+ui_local.h
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/!svn/ver/18/trunk/code/Quake%202%20Evolved/ui/ui_local.h
+END
+ui_ingame.c
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/ui/ui_ingame.c
+END
+ui_performance.c
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/ui/ui_performance.c
+END
+ui_audio.c
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/ui/ui_audio.c
+END

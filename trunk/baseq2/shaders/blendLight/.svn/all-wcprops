@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/!svn/ver/8/trunk/baseq2/shaders/blendLight
+END
+generic.fs
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/!svn/ver/7/trunk/baseq2/shaders/blendLight/generic.fs
+END
+generic.vs
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/!svn/ver/8/trunk/baseq2/shaders/blendLight/generic.vs
+END

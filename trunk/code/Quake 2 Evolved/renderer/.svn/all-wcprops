@@ -1,0 +1,227 @@
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/!svn/ver/18/trunk/code/Quake%202%20Evolved/renderer
+END
+r_deform.c
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/!svn/ver/14/trunk/code/Quake%202%20Evolved/renderer/r_deform.c
+END
+r_lightEditor.c
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/!svn/ver/18/trunk/code/Quake%202%20Evolved/renderer/r_lightEditor.c
+END
+r_renderInteraction.c
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/!svn/ver/18/trunk/code/Quake%202%20Evolved/renderer/r_renderInteraction.c
+END
+r_batch.c
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/!svn/ver/18/trunk/code/Quake%202%20Evolved/renderer/r_batch.c
+END
+refresh.h
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/!svn/ver/18/trunk/code/Quake%202%20Evolved/renderer/refresh.h
+END
+r_image.c
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/!svn/ver/18/trunk/code/Quake%202%20Evolved/renderer/r_image.c
+END
+palette.h
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/renderer/palette.h
+END
+r_subview.c
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/!svn/ver/17/trunk/code/Quake%202%20Evolved/renderer/r_subview.c
+END
+r_postProcess.c
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/!svn/ver/18/trunk/code/Quake%202%20Evolved/renderer/r_postProcess.c
+END
+r_debug.c
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/!svn/ver/18/trunk/code/Quake%202%20Evolved/renderer/r_debug.c
+END
+r_world.c
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/!svn/ver/18/trunk/code/Quake%202%20Evolved/renderer/r_world.c
+END
+r_postProcessEditor.c
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/!svn/ver/18/trunk/code/Quake%202%20Evolved/renderer/r_postProcessEditor.c
+END
+r_material.c
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/!svn/ver/18/trunk/code/Quake%202%20Evolved/renderer/r_material.c
+END
+r_cull.c
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/!svn/ver/18/trunk/code/Quake%202%20Evolved/renderer/r_cull.c
+END
+r_local.h
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/!svn/ver/18/trunk/code/Quake%202%20Evolved/renderer/r_local.h
+END
+r_model.c
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/!svn/ver/18/trunk/code/Quake%202%20Evolved/renderer/r_model.c
+END
+r_glState.c
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/!svn/ver/17/trunk/code/Quake%202%20Evolved/renderer/r_glState.c
+END
+r_shader.c
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/!svn/ver/8/trunk/code/Quake%202%20Evolved/renderer/r_shader.c
+END
+r_lightInteraction.c
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/!svn/ver/18/trunk/code/Quake%202%20Evolved/renderer/r_lightInteraction.c
+END
+r_transform.c
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/!svn/ver/12/trunk/code/Quake%202%20Evolved/renderer/r_transform.c
+END
+r_render.c
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/!svn/ver/17/trunk/code/Quake%202%20Evolved/renderer/r_render.c
+END
+r_frontEnd.c
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/!svn/ver/18/trunk/code/Quake%202%20Evolved/renderer/r_frontEnd.c
+END
+r_main.c
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/!svn/ver/18/trunk/code/Quake%202%20Evolved/renderer/r_main.c
+END
+r_backEnd.c
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/!svn/ver/18/trunk/code/Quake%202%20Evolved/renderer/r_backEnd.c
+END
+r_polygon.c
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/!svn/ver/8/trunk/code/Quake%202%20Evolved/renderer/r_polygon.c
+END
+r_renderCommon.c
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/!svn/ver/18/trunk/code/Quake%202%20Evolved/renderer/r_renderCommon.c
+END
+r_alias.c
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/!svn/ver/13/trunk/code/Quake%202%20Evolved/renderer/r_alias.c
+END
+r_lightCache.c
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/!svn/ver/11/trunk/code/Quake%202%20Evolved/renderer/r_lightCache.c
+END
+r_mesh.c
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/!svn/ver/8/trunk/code/Quake%202%20Evolved/renderer/r_mesh.c
+END
+r_scene.c
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/!svn/ver/8/trunk/code/Quake%202%20Evolved/renderer/r_scene.c
+END
+r_texture.c
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/!svn/ver/18/trunk/code/Quake%202%20Evolved/renderer/r_texture.c
+END
+r_commands.c
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/!svn/ver/18/trunk/code/Quake%202%20Evolved/renderer/r_commands.c
+END
+r_font.c
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/!svn/ver/8/trunk/code/Quake%202%20Evolved/renderer/r_font.c
+END
+r_program.c
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/!svn/ver/9/trunk/code/Quake%202%20Evolved/renderer/r_program.c
+END
+r_light.c
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/!svn/ver/18/trunk/code/Quake%202%20Evolved/renderer/r_light.c
+END
+r_decal.c
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/renderer/r_decal.c
+END
+r_arrayBuffer.c
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/!svn/ver/17/trunk/code/Quake%202%20Evolved/renderer/r_arrayBuffer.c
+END

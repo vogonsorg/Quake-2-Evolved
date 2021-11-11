@@ -1,0 +1,107 @@
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/!svn/ver/19/trunk/code/Quake%202%20Evolved/windows
+END
+win_system.c
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/!svn/ver/18/trunk/code/Quake%202%20Evolved/windows/win_system.c
+END
+win_editor.c
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/!svn/ver/19/trunk/code/Quake%202%20Evolved/windows/win_editor.c
+END
+q2.rc
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/windows/q2.rc
+END
+win_network.c
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/!svn/ver/17/trunk/code/Quake%202%20Evolved/windows/win_network.c
+END
+win_al.c
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/windows/win_al.c
+END
+q2.ico
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/windows/q2.ico
+END
+win_local.h
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/!svn/ver/6/trunk/code/Quake%202%20Evolved/windows/win_local.h
+END
+win_input.c
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/!svn/ver/16/trunk/code/Quake%202%20Evolved/windows/win_input.c
+END
+win_gl.c
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/!svn/ver/17/trunk/code/Quake%202%20Evolved/windows/win_gl.c
+END
+win_console.c
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/windows/win_console.c
+END
+qal.h
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/windows/qal.h
+END
+q2.aps
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/windows/q2.aps
+END
+qgl.h
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/!svn/ver/17/trunk/code/Quake%202%20Evolved/windows/qgl.h
+END
+win_wndProc.c
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/windows/win_wndProc.c
+END
+win_qal.c
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/windows/win_qal.c
+END
+resource.h
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/windows/resource.h
+END
+win_qgl.c
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/!svn/ver/17/trunk/code/Quake%202%20Evolved/windows/win_qgl.c
+END

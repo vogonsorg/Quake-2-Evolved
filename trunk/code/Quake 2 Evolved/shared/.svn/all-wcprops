@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/!svn/ver/19/trunk/code/Quake%202%20Evolved/shared
+END
+q_math.c
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/!svn/ver/19/trunk/code/Quake%202%20Evolved/shared/q_math.c
+END
+surfaceflags.h
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/shared/surfaceflags.h
+END
+string.h
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/shared/string.h
+END
+q_shared.h
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/!svn/ver/19/trunk/code/Quake%202%20Evolved/shared/q_shared.h
+END
+string.c
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/shared/string.c
+END
+q_shared.c
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/shared/q_shared.c
+END

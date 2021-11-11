@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/!svn/ver/8/trunk/baseq2/shaders/fogLight
+END
+generic.fs
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/!svn/ver/7/trunk/baseq2/shaders/fogLight/generic.fs
+END
+generic.vs
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/!svn/ver/8/trunk/baseq2/shaders/fogLight/generic.vs
+END

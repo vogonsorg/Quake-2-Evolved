@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/!svn/ver/8/trunk/baseq2/shaders/ambientLight
+END
+generic.fs
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/!svn/ver/8/trunk/baseq2/shaders/ambientLight/generic.fs
+END
+generic.vs
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/!svn/ver/8/trunk/baseq2/shaders/ambientLight/generic.vs
+END

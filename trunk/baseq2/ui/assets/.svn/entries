@@ -1,0 +1,67 @@
+10
+
+dir
+19
+http://quake-2-evolved.googlecode.com/svn/trunk/baseq2/ui/assets
+http://quake-2-evolved.googlecode.com/svn
+
+
+
+2012-11-21T23:43:28.653779Z
+3
+0annatar
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+57ff7906-05a8-d37e-0adb-b479f1c7d702
+
+segments
+dir
+
+levelshots
+dir
+
+banners
+dir
+
+mission_levelshots
+dir
+
+misc
+dir
+
+ingui
+dir
+
+arrows
+dir
+
+loading
+dir
+
+ui
+dir
+
+buttons
+dir
+
+title_screen
+dir
+
+quit_screen
+dir
+
+text
+dir
+

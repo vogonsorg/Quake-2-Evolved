@@ -1,0 +1,77 @@
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/!svn/ver/3/trunk/baseq2/ui/assets/ingui/titles
+END
+load_game_n.tga
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/!svn/ver/3/trunk/baseq2/ui/assets/ingui/titles/load_game_n.tga
+END
+return_to_game_n.tga
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/!svn/ver/3/trunk/baseq2/ui/assets/ingui/titles/return_to_game_n.tga
+END
+return_to_menu_s.tga
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/!svn/ver/3/trunk/baseq2/ui/assets/ingui/titles/return_to_menu_s.tga
+END
+options_n.tga
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/!svn/ver/3/trunk/baseq2/ui/assets/ingui/titles/options_n.tga
+END
+save_game_s.tga
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/!svn/ver/3/trunk/baseq2/ui/assets/ingui/titles/save_game_s.tga
+END
+load_game_s.tga
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/!svn/ver/3/trunk/baseq2/ui/assets/ingui/titles/load_game_s.tga
+END
+return_to_game_s.tga
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/!svn/ver/3/trunk/baseq2/ui/assets/ingui/titles/return_to_game_s.tga
+END
+options_s.tga
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/!svn/ver/3/trunk/baseq2/ui/assets/ingui/titles/options_s.tga
+END
+exit_game_n.tga
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/!svn/ver/3/trunk/baseq2/ui/assets/ingui/titles/exit_game_n.tga
+END
+return_to_menu_n.tga
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/!svn/ver/3/trunk/baseq2/ui/assets/ingui/titles/return_to_menu_n.tga
+END
+save_game_n.tga
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/!svn/ver/3/trunk/baseq2/ui/assets/ingui/titles/save_game_n.tga
+END
+exit_game_s.tga
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/!svn/ver/3/trunk/baseq2/ui/assets/ingui/titles/exit_game_s.tga
+END

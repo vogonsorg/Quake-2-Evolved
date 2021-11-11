@@ -1,0 +1,231 @@
+
+==================================================
+Features In This Version: 0.42
+==================================================
+Client:
+- New Console
+- New View Blends
+
+File System
+
+Console Variable System
+
+Command Execution System:
+
+Renderer:
+- Fully Dynamic, Unified Per-Pixel Lighting And Shadowing Model
+- Doom 3-style Materials
+- Post-Processing Effects
+- Point, Cube, Projected, Directional, Fog, and Blend Lights
+- GLSL Shaders
+- Mirror And Remote Subviews
+- TrueType Font Support
+- Widescreen support
+- New Culling
+- Rendering Commands
+
+Sound:
+
+==================================================
+Future Releases
+==================================================
+- GUI system
+- Splash Screen
+- New Dedicated Server
+- New Particle System
+- Flare/Corona editor
+- A New Map Editor (though this has nothing to do with the engine)
+- Faster file downloading, the current way is too slow for modern standards
+- Rewrite scens to a Quake 3-ish safer system which keeps track of everything going on in a scene
+- Lights that can be bound to func_ like elevators
+- Resizable window
+- Make a document describing the new decal and particle effects
+- Per-surface sounds, particle, and decal effects
+
+==================================================
+Client
+==================================================
+Cleanups
+- cl_main.c
+  - variables that might no be in use
+  - CL_Register
+- cl_parse.c
+  - Replace Com_StripExtension
+
+Features
+- View Blendings
+- Console
+- Cinematic
+- TrueType Font drawing
+- Finish dynamic lights
+
+Fixes
+- cl_drawGodModeShell should turn on when == 1 not == 0
+- HUD layout drawing needs to be scaled, also the layout is wrong
+- Memory is invalid in CL_LoadLevel
+
+Optimizations
+- The loading had uppercase characters before, should we change it back?
+
+==================================================
+Collision
+==================================================
+Cleanups
+- Continue cleaning it up and sort it into the proper files
+
+Features
+
+Fixes
+
+Optimizations
+
+==================================================
+Common
+==================================================
+Cleanups
+- common.h needs to be finished
+- pmove.c
+- protocol.h
+
+Features
+- File System
+  - Use CONFIG_FILE instaid of "Quake2Evovled.cfg"
+  - Add pack loading functions?
+- Console Variable System
+
+Fixes
+- com_speeds crashes in CL_Frame
+- Make sure Com_AddStartupCommands is doing Cmd_AppendText right
+
+Optimizations
+
+==================================================
+Renderer
+==================================================
+Cleanups
+- Rewrite parts of RB_BatchParticle
+
+Features
+- Subviews
+- Make sure the debug tools are working as they should with GL_DepthBounds etc.
+- Internal Default Model
+- rg.pc.dynamicDecal needs to be set
+- Make some kind of debugging tool the shows culling, because right now we only have a counter that isnt that great
+  but it would be better with a visual tool. Similar to http://www.youtube.com/watch?v=fPRuRonvlw4.
+  - RB_ShowCull
+- Generate vertex/index buffer cache for BSP and Alias models
+
+Fixes
+- Stencil Shadows are flickering
+  - 1.) Vertex buffer problem?
+  - 2.) It some how "works" with light scissors
+- Blend, fog, and ambient lights have a "black square" problem.
+  - 1.) Looks like it's a face culling problem
+- Light scissors are not working
+  - GL_Scissor problem?
+  - backEnd.scissor or backEnd.viewport issue?
+- noDraw has no texture
+- R_UniformMatrix3 has a warning C4047: 'function' : 'const float *' differs in levels of indirection from 'vec3_t [3]'
+- Beams are culled out wrong
+- Mem_ClearedAlloc to Mem_Alloc problem(s)
+  1.) Invalid nodes in R_MarkLeaves
+- When selecting lights in the light editor, it draws the center from the last selected light
+
+Optimizations
+- The renderer must be 60FPS stable before release
+  - The lights are the ones who takes away most of the frame rate
+    1.) Culling
+	2.) Precaching
+	3.) One pass for both static and dynamic lights
+	4.) Compute data when needed
+
+==================================================
+Server
+==================================================
+Cleanups
+- Re-order pointers in SG_SetupFramework
+
+Features
+
+Fixes
+- Some console variables are incorrect
+- Connecting to a server stops when we are about to enter a game
+  - 1.) Connected to MAX_PATH_LENGTH changes? (config string)
+
+Optimizations
+
+==================================================
+Shared
+==================================================
+Cleanups
+
+Features
+- Move over to C++
+  - Add C++ classes
+  - Change structures and enums
+  - NOTE: before doing this we need to fix all the warnings since C++ will print them as errors
+  - winsock has a problem with this
+
+Fixes
+
+Optimizations
+
+==================================================
+Sound
+==================================================
+Cleanups
+- s_music (DONE!)
+- s_rawSamples (DONE!)
+- s_soundShader (DONE!)
+- s_sound (DONE!)
+- s_listener (DONE!)
+- s_channel (S_UpdateChannel etc.)
+- s_main (S_Register, clean unused CVars)
+- s_emitter (DONE!)
+- s_reverb (DONE!)
+- s_reverbEditor (update)
+
+Features
+- Rewrite
+  1.) Replace S_PlaySound, look at OverDose
+  2.) Reverb, filters, and portals
+  3.) Finish looping sounds
+
+Fixes
+- Some sounds are crashing in S_LoadWAV
+- Fix sound shader names since Quake 2 loaded the sound file direcly, we need to modifie it a bit
+
+Optimizations
+
+==================================================
+UI
+==================================================
+Cleanups
+
+Features
+- Get string drawing functions to work
+- For video->graphical settings, use low, medium, high and ultra config files
+
+Fixes
+- The scale of things are messed up due to the ratio changes
+- Rewrite the drawing functions
+  - UI_Credits_DrawFunc
+  - UI_SpinControl_Draw
+
+Optimizations
+
+==================================================
+Windows
+==================================================
+Cleanups
+
+Features
+- Rewrite input to support Xbox controller etc.?
+- Rewrite the light editor window
+- System Console needs other colors
+
+Fixes
+- Seems like Sys_Error crashes when it should print to the system console
+- The notify icon created by the system console does not get removed
+
+Optimizations

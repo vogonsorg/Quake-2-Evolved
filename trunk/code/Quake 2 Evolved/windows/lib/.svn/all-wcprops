@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/windows/lib
+END
+libvorbisfile.lib
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/windows/lib/libvorbisfile.lib
+END
+libvorbis.lib
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/windows/lib/libvorbis.lib
+END
+zlib.lib
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/windows/lib/zlib.lib
+END
+libogg.lib
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/windows/lib/libogg.lib
+END

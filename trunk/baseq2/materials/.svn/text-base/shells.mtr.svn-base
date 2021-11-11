@@ -1,0 +1,103 @@
+
+gfx/shells/powerScreen
+{
+	noShadows
+	twoSided
+	{
+		map		gfx/shell/power_screen.tga
+		blend		add
+		scroll		time * 1, time * 0.1
+		scale		5, 5
+		rotate		time * 10
+		colored
+	}
+}
+
+gfx/shells/invulnerability
+{
+	noShadows
+	twoSided
+	deform 			expand 0.2
+	{
+		map		gfx/shells/red.tga
+		blend		add
+		scroll		time * 1, time * 0.1
+		scale		5, 5
+		rotate		time * 10
+	}
+}
+
+gfx/shells/quadDamage
+{
+	noShadows
+	twoSided
+	deform 			expand 0.2
+	{
+		map		gfx/shells/blue.tga
+		blend		add
+		scroll		time * 1, time * 0.1
+		scale		5, 5
+		rotate		time * 10
+	}
+}
+
+gfx/shells/doubleDamage
+{
+	noShadows
+	twoSided
+	deform 			expand 0.2
+	{
+		map		gfx/shells/generic.tga
+		blend		add
+		scroll		time * 1, time * 0.1
+		scale		5, 5
+		rotate		time * 10
+		colored
+	}
+}
+
+gfx/shells/halfDamage
+{
+	noShadows
+	twoSided
+	deform 			expand 0.2
+	{
+		map		gfx/shells/generic.tga
+		blend		add
+		scroll		time * 1, time * 0.1
+		scale		5, 5
+		rotate		time * 10
+		colored
+	}
+}
+
+// TODO: fix the shader and apply it to all the others
+
+gfx/shells/generic
+{
+	noShadows
+	twoSided
+	deform 			expand 0.2
+	{
+		shaderQuality == 2
+
+		shader		heatHaze
+
+		shaderParm	u_BumpScale		0, 0
+		shaderParm	u_BumpScroll		0, 0
+		shaderParm	u_DistortionScale	0
+		shaderParm	u_AlphaModulate		0
+
+		shaderMap	u_AlphaMap		makeAlpha(gfx/shells/generic.tga)
+		shaderMap	u_BumpMap		normalMap gfx/shells/shell_local.tga
+		shaderMap	u_ColorMap		_currentColor
+	}
+	{
+		map		gfx/shells/generic.tga
+		blend		add
+		scroll		time * 1, time * 0.1
+		scale		5, 5
+		rotate		time * 10
+		colored
+	}
+}

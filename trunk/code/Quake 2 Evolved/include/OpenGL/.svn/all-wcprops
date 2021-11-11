@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/include/OpenGL
+END
+glext.h
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/include/OpenGL/glext.h
+END
+wglext.h
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/include/OpenGL/wglext.h
+END

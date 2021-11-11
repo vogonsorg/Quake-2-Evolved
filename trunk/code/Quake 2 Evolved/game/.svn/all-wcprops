@@ -1,0 +1,485 @@
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/game
+END
+sg_target.c
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/game/sg_target.c
+END
+sg_spawn.c
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/game/sg_spawn.c
+END
+sg_ai.c
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/game/sg_ai.c
+END
+SGame.vcxproj.user
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/game/SGame.vcxproj.user
+END
+sg_misc.c
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/game/sg_misc.c
+END
+m_actor.c
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/game/m_actor.c
+END
+m_actor.h
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/game/m_actor.h
+END
+sg_projectile.c
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/game/sg_projectile.c
+END
+sg_commands.c
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/game/sg_commands.c
+END
+m_boss31.h
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/game/m_boss31.h
+END
+m_ironMaiden.c
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/game/m_ironMaiden.c
+END
+sg_clientView.c
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/game/sg_clientView.c
+END
+m_icarus.c
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/game/m_icarus.c
+END
+m_hover.h
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/game/m_hover.h
+END
+sg_client.c
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/game/sg_client.c
+END
+m_boss2.h
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/game/m_boss2.h
+END
+m_hornet.c
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/game/m_hornet.c
+END
+m_jorg.c
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/game/m_jorg.c
+END
+m_soldier.c
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/game/m_soldier.c
+END
+sg_turret.c
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/game/sg_turret.c
+END
+sg_monster.c
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/game/sg_monster.c
+END
+m_gladiator.c
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/game/m_gladiator.c
+END
+m_soldier.h
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/game/m_soldier.h
+END
+m_mutant.c
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/game/m_mutant.c
+END
+m_parasite.c
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/game/m_parasite.c
+END
+sg_chaseCamera.c
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/game/sg_chaseCamera.c
+END
+m_float.h
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/game/m_float.h
+END
+m_gladiator.h
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/game/m_gladiator.h
+END
+m_superTank.c
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/game/m_superTank.c
+END
+m_parasite.h
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/game/m_parasite.h
+END
+m_mutant.h
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/game/m_mutant.h
+END
+m_medic.c
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/game/m_medic.c
+END
+m_flyer.c
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/game/m_flyer.c
+END
+TODO.txt
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/game/TODO.txt
+END
+m_flyer.h
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/game/m_flyer.h
+END
+m_medic.h
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/game/m_medic.h
+END
+sg_clientTrail.c
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/game/sg_clientTrail.c
+END
+SGame.sln
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/game/SGame.sln
+END
+m_gunner.c
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/game/m_gunner.c
+END
+m_player.h
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/game/m_player.h
+END
+m_flipper.c
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/game/m_flipper.c
+END
+m_gunner.h
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/game/m_gunner.h
+END
+sg_serverCommands.c
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/game/sg_serverCommands.c
+END
+sg_weapon.c
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/game/sg_weapon.c
+END
+m_flipper.h
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/game/m_flipper.h
+END
+sg_func.c
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/game/sg_func.c
+END
+m_rider.h
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/game/m_rider.h
+END
+q_shared.c
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/game/q_shared.c
+END
+g_phys.c
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/game/g_phys.c
+END
+q_shared.h
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/game/q_shared.h
+END
+m_boss32.h
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/game/m_boss32.h
+END
+m_supertank.h
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/game/m_supertank.h
+END
+m_chick.h
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/game/m_chick.h
+END
+m_makron.c
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/game/m_makron.c
+END
+m_brain.c
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/game/m_brain.c
+END
+m_floater.c
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/game/m_floater.c
+END
+sg_clientHUD.c
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/game/sg_clientHUD.c
+END
+m_berserk.c
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/game/m_berserk.c
+END
+m_flash.c
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/game/m_flash.c
+END
+m_tank.c
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/game/m_tank.c
+END
+m_brain.h
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/game/m_brain.h
+END
+m_tank.h
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/game/m_tank.h
+END
+game.h
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/game/game.h
+END
+m_berserk.h
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/game/m_berserk.h
+END
+m_makron_teleport.c
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/game/m_makron_teleport.c
+END
+sg_save.c
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/game/sg_save.c
+END
+m_insane.c
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/game/m_insane.c
+END
+sg_monsterMovement.c
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/game/sg_monsterMovement.c
+END
+sg_trigger.c
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/game/sg_trigger.c
+END
+m_insane.h
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/game/m_insane.h
+END
+sg_combat.c
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/game/sg_combat.c
+END
+sg_utilities.c
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/game/sg_utilities.c
+END
+g_local.h
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/game/g_local.h
+END
+SGame.vcxproj
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/game/SGame.vcxproj
+END
+m_infantry.c
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/game/m_infantry.c
+END
+SGame.def
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/game/SGame.def
+END
+sg_items.c
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/game/sg_items.c
+END
+m_infantry.h
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/game/m_infantry.h
+END
+SGame.vcxproj.filters
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/game/SGame.vcxproj.filters
+END
+sg_main.c
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/!svn/ver/4/trunk/code/Quake%202%20Evolved/game/sg_main.c
+END

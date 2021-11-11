@@ -1,0 +1,59 @@
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/!svn/ver/19/trunk/code/Quake%202%20Evolved/server
+END
+sv_commands.c
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/!svn/ver/18/trunk/code/Quake%202%20Evolved/server/sv_commands.c
+END
+server.h
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/!svn/ver/18/trunk/code/Quake%202%20Evolved/server/server.h
+END
+sv_main.c
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/!svn/ver/17/trunk/code/Quake%202%20Evolved/server/sv_main.c
+END
+sv_world.c
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/!svn/ver/18/trunk/code/Quake%202%20Evolved/server/sv_world.c
+END
+sv_spawn.c
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/!svn/ver/18/trunk/code/Quake%202%20Evolved/server/sv_spawn.c
+END
+sv_send.c
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/!svn/ver/19/trunk/code/Quake%202%20Evolved/server/sv_send.c
+END
+sv_game.c
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/!svn/ver/18/trunk/code/Quake%202%20Evolved/server/sv_game.c
+END
+sv_ents.c
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/!svn/ver/18/trunk/code/Quake%202%20Evolved/server/sv_ents.c
+END
+sv_parse.c
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/!svn/ver/17/trunk/code/Quake%202%20Evolved/server/sv_parse.c
+END

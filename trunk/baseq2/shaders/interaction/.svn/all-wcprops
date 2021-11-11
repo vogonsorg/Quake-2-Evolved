@@ -1,0 +1,53 @@
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/!svn/ver/9/trunk/baseq2/shaders/interaction
+END
+cubicGeneric.vs
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/!svn/ver/9/trunk/baseq2/shaders/interaction/cubicGeneric.vs
+END
+cubicGeneric.fs
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/!svn/ver/9/trunk/baseq2/shaders/interaction/cubicGeneric.fs
+END
+pointGeneric.vs
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/!svn/ver/9/trunk/baseq2/shaders/interaction/pointGeneric.vs
+END
+pointGeneric.fs
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/!svn/ver/9/trunk/baseq2/shaders/interaction/pointGeneric.fs
+END
+directionalGeneric.vs
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/!svn/ver/9/trunk/baseq2/shaders/interaction/directionalGeneric.vs
+END
+directionalGeneric.fs
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/!svn/ver/9/trunk/baseq2/shaders/interaction/directionalGeneric.fs
+END
+projectedGeneric.fs
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/!svn/ver/9/trunk/baseq2/shaders/interaction/projectedGeneric.fs
+END
+projectedGeneric.vs
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/!svn/ver/9/trunk/baseq2/shaders/interaction/projectedGeneric.vs
+END

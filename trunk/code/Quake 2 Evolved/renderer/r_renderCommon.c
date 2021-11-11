@@ -1,0 +1,1794 @@
+/*
+ ------------------------------------------------------------------------------
+ Copyright (C) 1997-2001 Id Software.
+
+ This file is part of the Quake 2 source code.
+
+ The Quake 2 source code is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or (at your
+ option) any later version.
+
+ The Quake 2 source code is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+ more details.
+
+ You should have received a copy of the GNU General Public License along with
+ the Quake 2 source code; if not, write to the Free Software Foundation, Inc.,
+ 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ ------------------------------------------------------------------------------
+*/
+
+
+//
+// r_renderCommon.c - Common rendering passes
+//
+
+
+#include "r_local.h"
+
+
+/*
+ ==============================================================================
+
+ Z-FILL RENDERING
+
+ ==============================================================================
+*/
+
+
+/*
+ ==================
+ RB_DrawDepth
+ ==================
+*/
+static void RB_DrawDepth (){
+
+	stage_t	*stage;
+	bool	alphaTested = false;
+	int		i;
+
+	RB_Cull(backEnd.material);
+
+	if (backEnd.material->coverage == MC_PERFORATED){
+		for (i = 0, stage = backEnd.material->stages; i < backEnd.material->numStages; i++, stage++){
+			if (stage->lighting != SL_AMBIENT && stage->lighting != SL_DIFFUSE)
+				continue;
+
+			if (!backEnd.material->expressionRegisters[stage->conditionRegister])
+				continue;
+
+			if (stage->shaderStage.program)
+				continue;
+
+			if (!(stage->drawState & DS_ALPHATEST))
+				continue;
+
+			if (!alphaTested){
+				alphaTested = true;
+
+				if (glConfig.multiSamples > 1 && r_alphaToCoverage->integerValue)
+					qglEnable(GL_SAMPLE_ALPHA_TO_COVERAGE);
+			}
+
+			if (stage->drawState & DS_POLYGONOFFSET){
+				GL_Enable(GL_POLYGON_OFFSET_FILL);
+				GL_PolygonOffset(r_offsetFactor->floatValue, r_offsetUnits->floatValue * stage->polygonOffset);
+			}
+			else
+				GL_Disable(GL_POLYGON_OFFSET_FILL);
+
+			GL_Enable(GL_ALPHA_TEST);
+			GL_AlphaFunc(GL_GREATER, backEnd.material->expressionRegisters[stage->alphaTestRegister]);
+
+			RB_SetupTextureStage(backEnd.material, &stage->textureStage);
+			RB_SetupColorStage(backEnd.material, &stage->colorStage);
+
+			RB_DrawElements();
+
+			RB_CleanupColorStage(backEnd.material, &stage->colorStage);
+			RB_CleanupTextureStage(backEnd.material, &stage->textureStage);
+		}
+
+		if (alphaTested){
+			qglColor3f(0.0f, 0.0f, 0.0f);
+
+			GL_DisableTexture();
+
+			GL_Disable(GL_ALPHA_TEST);
+
+			if (glConfig.multiSamples > 1 && r_alphaToCoverage->integerValue)
+				qglDisable(GL_SAMPLE_ALPHA_TO_COVERAGE);
+
+			return;
+		}
+	}
+
+	RB_PolygonOffset(backEnd.material);
+
+	RB_DrawElements();
+}
+
+/*
+ ==================
+ RB_FillDepthBuffer
+ ==================
+*/
+void RB_FillDepthBuffer (int numMeshes, mesh_t *meshes){
+
+	mesh_t	*mesh;
+	uint	sort;
+	bool	skip;
+	int		i;
+
+	if (!numMeshes)
+		return;
+
+	QGL_LogPrintf("---------- RB_FillDepthBuffer ----------\n");
+
+	// Set depth filling mode
+	backEnd.depthFilling = true;
+
+	// Set the GL state
+	GL_DisableTexture();
+
+	GL_PolygonMode(GL_FILL);
+
+	GL_Disable(GL_BLEND);
+
+	GL_Disable(GL_ALPHA_TEST);
+
+	GL_Enable(GL_DEPTH_TEST);
+	GL_DepthFunc(GL_LEQUAL);
+
+	GL_Enable(GL_STENCIL_TEST);
+	GL_StencilFunc(GL_ALWAYS, 128, 255);
+	GL_StencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+
+	if (backEnd.viewParms.primaryView)
+		GL_ColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
+	else
+		GL_ColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+
+	GL_DepthMask(GL_TRUE);
+	GL_StencilMask(255);
+
+	qglColor3f(0.0f, 0.0f, 0.0f);
+
+	// Clear the batch state
+	backEnd.entity = NULL;
+	backEnd.material = NULL;
+
+	sort = 0;
+
+	// Run through the meshes
+	for (i = 0, mesh = meshes; i < numMeshes; i++, mesh++){
+		// Check if the state changed
+		if (mesh->sort != sort){
+			sort = mesh->sort;
+
+			// Draw the last batch
+			RB_RenderBatch();
+
+			// Evaluate registers if needed
+			if (mesh->entity != backEnd.entity || mesh->material != backEnd.material)
+				RB_EvaluateRegisters(mesh->material, backEnd.floatTime, mesh->entity->materialParms);
+
+			// Skip if condition evaluated to false
+			if (!mesh->material->expressionRegisters[mesh->material->conditionRegister]){
+				skip = true;
+				continue;
+			}
+
+			// Set the entity state if needed
+			if (mesh->entity != backEnd.entity)
+				RB_EntityState(mesh->entity);
+
+			// Create a new batch
+			RB_SetupBatch(mesh->entity, mesh->material, false, false, RB_DrawDepth);
+
+			skip = false;
+		}
+
+		if (skip)
+			continue;
+
+		// Batch the surface geometry
+		RB_BatchGeometry(mesh->type, mesh->data);
+	}
+
+	// Draw the last batch
+	RB_RenderBatch();
+
+	// Clear depth filling mode
+	backEnd.depthFilling = false;
+
+	QGL_LogPrintf("--------------------\n");
+}
+
+
+/*
+ ==============================================================================
+
+ AMBIENT RENDERING
+
+ ==============================================================================
+*/
+
+
+/*
+ ==================
+ RB_DrawMaterial
+ ==================
+*/
+static void RB_DrawMaterial (){
+
+	stage_t	*stage;
+	int		i;
+
+	QGL_LogPrintf("----- RB_DrawMaterial ( %s ) -----\n", backEnd.material->name);
+
+	RB_Cull(backEnd.material);
+
+	for (i = 0, stage = backEnd.material->stages; i < backEnd.material->numStages; i++, stage++){
+		if (stage->lighting != SL_AMBIENT)
+			continue;
+
+		if (!backEnd.material->expressionRegisters[stage->conditionRegister])
+			continue;
+
+		// Special case for custom shaders
+		if (stage->shaderStage.program){
+			if (r_skipShaders->integerValue)
+				continue;
+
+			RB_DrawState(backEnd.material, stage);
+
+			RB_SetupShaderStage(backEnd.material, &stage->shaderStage);
+
+			RB_DrawElements();
+
+			RB_CleanupShaderStage(backEnd.material, &stage->shaderStage);
+
+			continue;
+		}
+
+		// General case
+		RB_DrawState(backEnd.material, stage);
+
+		RB_SetupTextureStage(backEnd.material, &stage->textureStage);
+		RB_SetupColorStage(backEnd.material, &stage->colorStage);
+
+		RB_DrawElements();
+
+		RB_CleanupColorStage(backEnd.material, &stage->colorStage);
+		RB_CleanupTextureStage(backEnd.material, &stage->textureStage);
+	}
+
+	QGL_LogPrintf("--------------------\n");
+}
+
+/*
+ ==================
+ RB_RenderMaterialPasses
+ ==================
+*/
+void RB_RenderMaterialPasses (int numMeshes, mesh_t *meshes, ambientPass_t pass){
+
+	mesh_t	*mesh;
+	uint	sort;
+	bool	skip;
+	int		i;
+
+	if (!numMeshes)
+		return;
+
+	// Development tools
+	if (r_skipAmbient->integerValue)
+		return;
+
+	if (r_skipTranslucent->integerValue){
+		if (pass == AP_TRANSLUCENT)
+			return;
+	}
+
+	if (r_skipPostProcess->integerValue){
+		if (pass == AP_POST_PROCESS)
+			return;
+	}
+
+	QGL_LogPrintf("---------- RB_RenderMaterialPasses ----------\n");
+
+	// Set the GL state
+	GL_PolygonMode(GL_FILL);
+
+	GL_Enable(GL_DEPTH_TEST);
+
+	GL_Enable(GL_STENCIL_TEST);
+	GL_StencilFunc(GL_ALWAYS, 128, 255);
+	GL_StencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+
+	if (pass == AP_POST_PROCESS)
+		GL_DepthMask(GL_TRUE);
+	else
+		GL_DepthMask(GL_FALSE);
+
+	GL_StencilMask(255);
+
+	// Enable seamless cube maps if desired
+	if (r_seamlessCubeMaps->integerValue)
+		qglEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
+
+	// Clear the batch state
+	backEnd.entity = NULL;
+	backEnd.material = NULL;
+
+	sort = 0;
+
+	// Run through the meshes
+	for (i = 0, mesh = meshes; i < numMeshes; i++, mesh++){
+		// Check if the state changed
+		if (mesh->sort != sort){
+			sort = mesh->sort;
+
+			// Draw the last batch
+			RB_RenderBatch();
+
+			// Skip if it doesn't have ambient stages
+			if (!mesh->material->numAmbientStages){
+				skip = true;
+				continue;
+			}
+
+			// Evaluate registers if needed
+			if (mesh->entity != backEnd.entity || mesh->material != backEnd.material)
+				RB_EvaluateRegisters(mesh->material, backEnd.floatTime, mesh->entity->materialParms);
+
+			// Skip if condition evaluated to false
+			if (!mesh->material->expressionRegisters[mesh->material->conditionRegister]){
+				skip = true;
+				continue;
+			}
+
+			// Set the entity state if needed
+			if (mesh->entity != backEnd.entity)
+				RB_EntityState(mesh->entity);
+
+			// Capture the current color if needed
+			if ((mesh->material->flags & MF_NEEDCURRENTCOLOR) && !(mesh->material->flags & MF_UPDATECURRENTCOLOR)){
+				if (backEnd.currentColorCaptured != mesh->material->sort){
+					backEnd.currentColorCaptured = mesh->material->sort;
+
+					R_CopyFramebufferToTexture(rg.currentColorTexture, 0, backEnd.viewport.x, backEnd.viewport.y, backEnd.viewport.width, backEnd.viewport.height);
+				}
+			}
+
+			// Capture the current depth if needed
+			if ((mesh->material->flags & MF_NEEDCURRENTDEPTH) && !(mesh->material->flags & MF_UPDATECURRENTDEPTH)){
+				if (backEnd.currentDepthCaptured != true){
+					backEnd.currentDepthCaptured = true;
+
+					R_CopyFramebufferToTexture(rg.currentDepthTexture, 0, backEnd.viewport.x, backEnd.viewport.y, backEnd.viewport.width, backEnd.viewport.height);
+				}
+			}
+
+			// Create a new batch
+			RB_SetupBatch(mesh->entity, mesh->material, false, false, RB_DrawMaterial);
+
+			skip = false;
+		}
+
+		if (skip)
+			continue;
+
+		// Batch the surface geometry
+		RB_BatchGeometry(mesh->type, mesh->data);
+	}
+
+	// Draw the last batch
+	RB_RenderBatch();
+
+	// Disable seamless cube maps if desired
+	if (r_seamlessCubeMaps->integerValue)
+		qglDisable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
+
+	QGL_LogPrintf("--------------------\n");
+}
+
+
+/*
+ ==============================================================================
+
+ SHADOW & INTERACTION RENDERING
+
+ ==============================================================================
+*/
+
+
+/*
+ ==================
+ RB_DrawShadow
+ ==================
+*/
+static void RB_DrawShadow (){
+
+	if (backEnd.shadowCaps){
+		if (glConfig.stencilTwoSideAvailable){
+			qglActiveStencilFaceEXT(GL_BACK);
+			GL_StencilOp(GL_KEEP, GL_DECR_WRAP_EXT, GL_KEEP);
+			qglActiveStencilFaceEXT(GL_FRONT);
+			GL_StencilOp(GL_KEEP, GL_INCR_WRAP_EXT, GL_KEEP);
+
+			qglEnable(GL_STENCIL_TEST_TWO_SIDE_EXT);
+
+			RB_DrawElements();
+
+			qglDisable(GL_STENCIL_TEST_TWO_SIDE_EXT);
+		}
+		else if (glConfig.atiSeparateStencilAvailable){
+			qglStencilOpSeparateATI(GL_BACK, GL_KEEP, GL_DECR_WRAP_EXT, GL_KEEP);
+			qglStencilOpSeparateATI(GL_FRONT, GL_KEEP, GL_INCR_WRAP_EXT, GL_KEEP);
+
+			RB_DrawElements();
+
+			qglStencilOpSeparateATI(GL_BACK, GL_KEEP, GL_KEEP, GL_KEEP);
+			qglStencilOpSeparateATI(GL_FRONT, GL_KEEP, GL_KEEP, GL_KEEP);
+		}
+		else {
+			GL_CullFace(GL_BACK);
+			GL_StencilOp(GL_KEEP, GL_INCR_WRAP_EXT, GL_KEEP);
+
+			RB_DrawElements();
+
+			GL_CullFace(GL_FRONT);
+			GL_StencilOp(GL_KEEP, GL_DECR_WRAP_EXT, GL_KEEP);
+
+			RB_DrawElements();
+		}
+	}
+	else {
+		if (glConfig.stencilTwoSideAvailable){
+			qglActiveStencilFaceEXT(GL_BACK);
+			GL_StencilOp(GL_KEEP, GL_KEEP, GL_INCR_WRAP_EXT);
+			qglActiveStencilFaceEXT(GL_FRONT);
+			GL_StencilOp(GL_KEEP, GL_KEEP, GL_DECR_WRAP_EXT);
+
+			qglEnable(GL_STENCIL_TEST_TWO_SIDE_EXT);
+
+			RB_DrawElements();
+
+			qglDisable(GL_STENCIL_TEST_TWO_SIDE_EXT);
+		}
+		else if (glConfig.atiSeparateStencilAvailable){
+			qglStencilOpSeparateATI(GL_BACK, GL_KEEP, GL_KEEP, GL_INCR_WRAP_EXT);
+			qglStencilOpSeparateATI(GL_FRONT, GL_KEEP, GL_KEEP, GL_DECR_WRAP_EXT);
+
+			RB_DrawElements();
+
+			qglStencilOpSeparateATI(GL_BACK, GL_KEEP, GL_KEEP, GL_KEEP);
+			qglStencilOpSeparateATI(GL_FRONT, GL_KEEP, GL_KEEP, GL_KEEP);
+		}
+		else {
+			GL_CullFace(GL_FRONT);
+			GL_StencilOp(GL_KEEP, GL_KEEP, GL_INCR_WRAP_EXT);
+
+			RB_DrawElements();
+
+			GL_CullFace(GL_BACK);
+			GL_StencilOp(GL_KEEP, GL_KEEP, GL_DECR_WRAP_EXT);
+
+			RB_DrawElements();
+		}
+	}
+}
+
+/*
+ ==================
+ RB_RenderStencilShadows
+ ==================
+*/
+static void RB_RenderStencilShadows (int numMeshes, mesh_t *meshes){
+
+	mesh_t	*mesh;
+	uint	sort;
+	bool	skip;
+	int		i;
+
+	if (!numMeshes)
+		return;
+
+	// Development tool
+	if (r_skipShadows->integerValue)
+		return;
+
+	QGL_LogPrintf("---------- RB_RenderStencilShadows ----------\n");
+
+	// Set depth filling mode
+	backEnd.depthFilling = true;
+
+	// Set the GL state
+	GL_DisableTexture();
+
+	if (glConfig.stencilTwoSideAvailable || glConfig.atiSeparateStencilAvailable)
+		GL_Disable(GL_CULL_FACE);
+	else
+		GL_Enable(GL_CULL_FACE);
+
+	GL_Enable(GL_POLYGON_OFFSET_FILL);
+	GL_PolygonOffset(r_shadowOffsetFactor->floatValue, r_shadowOffsetUnits->floatValue);
+
+	GL_Disable(GL_BLEND);
+
+	GL_Disable(GL_ALPHA_TEST);
+
+	GL_Enable(GL_DEPTH_TEST);
+	GL_DepthFunc(GL_LEQUAL);
+
+	GL_Enable(GL_STENCIL_TEST);
+	GL_StencilFunc(GL_ALWAYS, 128, 255);
+	GL_StencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+
+	GL_ColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
+	GL_DepthMask(GL_FALSE);
+	GL_StencilMask(255);
+
+	// Clear the batch state
+	backEnd.entity = NULL;
+	backEnd.material = NULL;
+
+	sort = 0;
+
+	// Run through meshes
+	for (i = 0, mesh = meshes; i < numMeshes; i++, mesh++){
+		// Check if the state changed
+		if (mesh->sort != sort){
+			sort = mesh->sort;
+
+			// Draw the last batch
+			RB_RenderBatch();
+
+			// Evaluate registers if needed
+			if (mesh->entity != backEnd.entity || mesh->material != backEnd.material)
+				RB_EvaluateRegisters(mesh->material, backEnd.floatTime, mesh->entity->materialParms);
+
+			// Skip if condition evaluated to false
+			if (!mesh->material->expressionRegisters[mesh->material->conditionRegister]){
+				skip = true;
+				continue;
+			}
+
+			// Set the entity state if needed
+			if (mesh->entity != backEnd.entity){
+				RB_EntityState(mesh->entity);
+
+				// Transform the light for this entity
+				RB_TransformLightForEntity(backEnd.light, mesh->entity);
+			}
+
+			// Create a new batch
+			RB_SetupBatch(mesh->entity, mesh->material, true, mesh->caps, RB_DrawShadow);
+
+			skip = false;
+		}
+
+		if (skip)
+			continue;
+
+		// Batch the surface geometry
+		RB_BatchShadowGeometry(mesh->type, mesh->data);
+	}
+
+	// Draw the last batch
+	RB_RenderBatch();
+
+	// Clear depth filling mode
+	backEnd.depthFilling = false;
+
+	QGL_LogPrintf("--------------------\n");
+}
+
+/*
+ ==================
+ RB_DrawInteractions
+ ==================
+*/
+static void RB_DrawInteractions (){
+
+	interaction_t	in;
+	stage_t			*stage, *lightStage;
+	cinData_t		data;
+	int				i, j;
+
+	QGL_LogPrintf("----- RB_DrawInteractions ( %s on %s ) -----\n", backEnd.lightMaterial->name, backEnd.material->name);
+
+	RB_Cull(backEnd.material);
+	RB_PolygonOffset(backEnd.material);
+
+	qglVertexAttribPointer(GL_ATTRIB_NORMAL, 3, GL_FLOAT, false, sizeof(glVertex_t), GL_VERTEX_NORMAL(backEnd.vertexPointer));
+	qglVertexAttribPointer(GL_ATTRIB_TANGENT1, 3, GL_FLOAT, false, sizeof(glVertex_t), GL_VERTEX_TANGENT1(backEnd.vertexPointer));
+	qglVertexAttribPointer(GL_ATTRIB_TANGENT2, 3, GL_FLOAT, false, sizeof(glVertex_t), GL_VERTEX_TANGENT2(backEnd.vertexPointer));
+	qglVertexAttribPointer(GL_ATTRIB_TEXCOORD, 2, GL_FLOAT, false, sizeof(glVertex_t), GL_VERTEX_TEXCOORD(backEnd.vertexPointer));
+	qglVertexAttribPointer(GL_ATTRIB_COLOR, 4, GL_UNSIGNED_BYTE, true, sizeof(glVertex_t), GL_VERTEX_COLOR(backEnd.vertexPointer));
+
+	// Run through the light stages
+	for (i = 0, lightStage = backEnd.lightMaterial->stages; i < backEnd.lightMaterial->numStages; i++, lightStage++){
+		if (!backEnd.lightMaterial->expressionRegisters[lightStage->conditionRegister])
+			continue;
+
+		// Compute the light matrix
+		RB_ComputeLightMatrix(backEnd.light, backEnd.entity, backEnd.lightMaterial, &lightStage->textureStage);
+
+		// Set up the interaction
+		in.bumpTexture = NULL;
+		in.diffuseTexture = NULL;
+		in.specularTexture = NULL;
+		in.lightProjectionTexture = lightStage->textureStage.texture;
+		in.lightFalloffTexture = backEnd.lightMaterial->lightFalloffImage;
+		in.lightCubeTexture = backEnd.lightMaterial->lightCubeImage;
+
+		in.colorScaleAndBias[0] = 0.0f;
+		in.colorScaleAndBias[1] = 1.0f;
+
+		in.lightColor[0] = backEnd.lightMaterial->expressionRegisters[lightStage->colorStage.registers[0]] * r_lightScale->floatValue;
+		in.lightColor[1] = backEnd.lightMaterial->expressionRegisters[lightStage->colorStage.registers[1]] * r_lightScale->floatValue;
+		in.lightColor[2] = backEnd.lightMaterial->expressionRegisters[lightStage->colorStage.registers[2]] * r_lightScale->floatValue;
+
+		// If we have a cinematic
+		if (lightStage->textureStage.cinematicHandle){
+			if (r_skipVideos->integerValue)
+				in.lightProjectionTexture = rg.blackTexture;
+			else {
+				// Decode a video frame
+				data = CIN_UpdateCinematic(lightStage->textureStage.cinematicHandle, backEnd.time);
+
+				// Update the texture if needed
+				if (!data.image)
+					in.lightProjectionTexture = rg.blackTexture;
+				else if (data.dirty)
+					R_UploadTextureImage(in.lightProjectionTexture, TMU_LIGHTPROJECTION, data.image, data.width, data.height);
+			}
+		}
+
+		// Run through the surface stages
+		for (j = 0, stage = backEnd.material->stages; j < backEnd.material->numStages; j++, stage++){
+			if (stage->lighting == SL_AMBIENT)
+				continue;
+
+			if (!backEnd.material->expressionRegisters[stage->conditionRegister])
+				continue;
+
+			// Combine multiple stages and draw interactions
+			switch (stage->lighting){
+			case SL_BUMP:
+				if (in.bumpTexture){
+					RB_DrawInteraction(&in);
+
+					in.diffuseTexture = NULL;
+					in.specularTexture = NULL;
+				}
+
+				in.bumpTexture = stage->textureStage.texture;
+
+				RB_ComputeTextureMatrix(backEnd.material, &stage->textureStage, in.bumpMatrix);
+
+				break;
+			case SL_DIFFUSE:
+				if (in.diffuseTexture)
+					RB_DrawInteraction(&in);
+
+				in.diffuseTexture = stage->textureStage.texture;
+
+				in.colorScaleAndBias[0] = stage->colorStage.scale;
+				in.colorScaleAndBias[1] = stage->colorStage.bias;
+
+				in.diffuseColor[0] = backEnd.material->expressionRegisters[stage->colorStage.registers[0]];
+				in.diffuseColor[1] = backEnd.material->expressionRegisters[stage->colorStage.registers[1]];
+				in.diffuseColor[2] = backEnd.material->expressionRegisters[stage->colorStage.registers[2]];
+
+				RB_ComputeTextureMatrix(backEnd.material, &stage->textureStage, in.diffuseMatrix);
+
+				break;
+			case SL_SPECULAR:
+				if (in.specularTexture)
+					RB_DrawInteraction(&in);
+
+				in.specularTexture = stage->textureStage.texture;
+
+				in.specularColor[0] = backEnd.material->expressionRegisters[stage->colorStage.registers[0]];
+				in.specularColor[1] = backEnd.material->expressionRegisters[stage->colorStage.registers[1]];
+				in.specularColor[2] = backEnd.material->expressionRegisters[stage->colorStage.registers[2]];
+
+				in.specularParms[0] = stage->parms[0];
+				in.specularParms[1] = stage->parms[1];
+
+				RB_ComputeTextureMatrix(backEnd.material, &stage->textureStage, in.specularMatrix);
+
+				break;
+			}
+		}
+
+		// Draw the last interaction
+		if (!in.bumpTexture && !in.diffuseTexture && !in.specularTexture)
+			continue;
+
+		RB_DrawInteraction(&in);
+	}
+
+	QGL_LogPrintf("--------------------\n");
+}
+
+/*
+ ==================
+ RB_InteractionPass
+ ==================
+*/
+static void RB_InteractionPass (int numMeshes, mesh_t *meshes){
+
+	mesh_t	*mesh;
+	uint	sort;
+	bool	skip;
+	int		i;
+
+	if (!numMeshes)
+		return;
+
+	QGL_LogPrintf("---------- RB_InteractionPass ----------\n");
+
+	// Set the GL state
+	GL_PolygonMode(GL_FILL);
+
+	GL_Enable(GL_BLEND);
+	GL_BlendFunc(GL_ONE, GL_ONE);
+	GL_BlendEquation(GL_FUNC_ADD);
+
+	GL_Disable(GL_ALPHA_TEST);
+
+	GL_Enable(GL_DEPTH_TEST);
+	GL_DepthFunc(GL_EQUAL);
+
+	GL_Enable(GL_STENCIL_TEST);
+	GL_StencilFunc(GL_GEQUAL, 128, 255);
+	GL_StencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+
+	GL_ColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+	GL_DepthMask(GL_FALSE);
+	GL_StencilMask(255);
+
+	// Enable the arrays
+	qglEnableVertexAttribArray(GL_ATTRIB_NORMAL);
+	qglEnableVertexAttribArray(GL_ATTRIB_TANGENT1);
+	qglEnableVertexAttribArray(GL_ATTRIB_TANGENT2);
+	qglEnableVertexAttribArray(GL_ATTRIB_TEXCOORD);
+	qglEnableVertexAttribArray(GL_ATTRIB_COLOR);
+
+	// Clear the batch state
+	backEnd.entity = NULL;
+	backEnd.material = NULL;
+
+	sort = 0;
+
+	// Run through meshes
+	for (i = 0, mesh = meshes; i < numMeshes; i++, mesh++){
+		// Check if the state changed
+		if (mesh->sort != sort){
+			sort = mesh->sort;
+
+			// Draw the last batch
+			RB_RenderBatch();
+
+			// Development tool
+			if (r_skipTranslucent->integerValue && mesh->material->coverage == MC_TRANSLUCENT){
+				skip = true;
+				continue;
+			}
+
+			// Evaluate registers if needed
+			if (mesh->entity != backEnd.entity || mesh->material != backEnd.material)
+				RB_EvaluateRegisters(mesh->material, backEnd.floatTime, mesh->entity->materialParms);
+
+			// Skip if condition evaluated to false
+			if (!mesh->material->expressionRegisters[mesh->material->conditionRegister]){
+				skip = true;
+				continue;
+			}
+
+			// Set the entity state if needed
+			if (mesh->entity != backEnd.entity){
+				RB_EntityState(mesh->entity);
+
+				// Transform the light for this entity
+				RB_TransformLightForEntity(backEnd.light, mesh->entity);
+			}
+
+			// Set the GL state
+			if (mesh->material->coverage != MC_TRANSLUCENT)
+				GL_DepthFunc(GL_EQUAL);
+			else
+				GL_DepthFunc(GL_LEQUAL);
+
+			// Create a new batch
+			RB_SetupBatch(mesh->entity, mesh->material, false, false, RB_DrawInteractions);
+
+			skip = false;
+		}
+
+		if (skip)
+			continue;
+
+		// Batch the surface geometry
+		RB_BatchGeometry(mesh->type, mesh->data);
+	}
+
+	// Draw the last batch
+	RB_RenderBatch();
+
+	// Restore the GL state
+	GL_SelectTexture(0);
+
+	// Unbind the program
+	GL_BindProgram(NULL);
+
+	// Disable the arrays
+	qglDisableVertexAttribArray(GL_ATTRIB_COLOR);
+	qglDisableVertexAttribArray(GL_ATTRIB_TEXCOORD);
+	qglDisableVertexAttribArray(GL_ATTRIB_TANGENT2);
+	qglDisableVertexAttribArray(GL_ATTRIB_TANGENT1);
+	qglDisableVertexAttribArray(GL_ATTRIB_NORMAL);
+
+	QGL_LogPrintf("--------------------\n");
+}
+
+/*
+ ==================
+ RB_RenderLights
+ ==================
+*/
+void RB_RenderLights (int numLights, light_t *lights){
+
+	light_t	*light;
+	int		i;
+
+	if (!numLights)
+		return;
+
+	// Development tool
+	if (r_skipInteractions->integerValue)
+		return;
+
+	QGL_LogPrintf("---------- RB_RenderLights ----------\n");
+
+	// Run through the lights
+	for (i = 0, light = lights; i < numLights; i++, light++){
+		if (!light->numInteractionMeshes){
+			if (light->material->lightType == LT_AMBIENT)
+				continue;
+		}
+
+		// Development tool
+		if (r_skipAmbientLights->integerValue){
+			if (light->material->lightType == LT_AMBIENT)
+				continue;
+		}
+
+		// Set the light
+		backEnd.light = light;
+		backEnd.lightMaterial = light->material;
+
+		// Evaluate registers
+		RB_EvaluateRegisters(light->material, backEnd.floatTime, light->materialParms);
+
+		// Skip if condition evaluated to false
+		if (!light->material->expressionRegisters[light->material->conditionRegister])
+			continue;
+
+		// Set up the scissor
+		GL_Scissor(light->scissor);
+
+		// Set up the depth bounds
+		if (glConfig.depthBoundsTestAvailable)
+			GL_DepthBounds(light->depthMin, light->depthMax);
+
+		// Clear the stencil buffer if needed
+		if (light->castShadows){
+			GL_StencilMask(255);
+
+			qglClearStencil(128);
+			qglClear(GL_STENCIL_BUFFER_BIT);
+		}
+
+		// Render the stencil shadow volume if needed
+		RB_RenderStencilShadows(light->numShadowMeshes, light->shadowMeshes);
+
+		// Draw the surfaces
+		RB_InteractionPass(light->numInteractionMeshes, light->interactionMeshes);
+	}
+
+	// Restore the scissor
+	GL_Scissor(backEnd.scissor);
+
+	// Restore the depth bounds
+	if (glConfig.depthBoundsTestAvailable)
+		GL_DepthBounds(0.0f, 1.0f);
+
+	QGL_LogPrintf("--------------------\n");
+}
+
+
+/*
+ ==============================================================================
+
+ BLEND LIGHT INTERACTION RENDERING
+
+ ==============================================================================
+*/
+
+
+/*
+ ==================
+ RB_DrawBlendLight
+ ==================
+*/
+static void RB_DrawBlendLight (){
+
+	stage_t	*stage;
+	vec4_t	color;
+	int		i;
+
+	RB_Cull(backEnd.material);
+	RB_PolygonOffset(backEnd.material);
+
+	// Run through the light stages
+	for (i = 0, stage = backEnd.lightMaterial->stages; i < backEnd.lightMaterial->numStages; i++, stage++){
+		if (!backEnd.lightMaterial->expressionRegisters[stage->conditionRegister])
+			continue;
+
+		// Set the GL state
+		if (stage->drawState & DS_BLEND){
+			GL_Enable(GL_BLEND);
+			GL_BlendFunc(stage->blendSrc, stage->blendDst);
+			GL_BlendEquation(stage->blendMode);
+		}
+		else
+			GL_Disable(GL_BLEND);
+
+		// Compute the light matrix
+		RB_ComputeLightMatrix(backEnd.light, backEnd.entity, backEnd.lightMaterial, &stage->textureStage);
+
+		// Set the light color
+		color[0] = backEnd.lightMaterial->expressionRegisters[stage->colorStage.registers[0]];
+		color[1] = backEnd.lightMaterial->expressionRegisters[stage->colorStage.registers[1]];
+		color[2] = backEnd.lightMaterial->expressionRegisters[stage->colorStage.registers[2]];
+		color[3] = backEnd.lightMaterial->expressionRegisters[stage->colorStage.registers[3]];
+
+		// Set up the program uniforms
+		R_UniformMatrix4(backEnd.blendLightParms.lightMatrix, GL_TRUE, backEnd.localParms.lightMatrix);
+		R_UniformVector4(backEnd.blendLightParms.lightColor, color);
+
+		// Bind the textures
+		GL_BindMultitexture(stage->textureStage.texture, TMU_LIGHTPROJECTION);
+		GL_BindMultitexture(backEnd.lightMaterial->lightFalloffImage, TMU_LIGHTFALLOFF);
+
+		// Draw it
+		RB_DrawElementsWithCounters(&rg.pc.interactionIndices, &rg.pc.interactionVertices);
+	}
+}
+
+/*
+ ==================
+ RB_BlendLightPass
+ ==================
+*/
+static void RB_BlendLightPass (int numMeshes, mesh_t *meshes){
+
+	mesh_t	*mesh;
+	uint	sort;
+	bool	skip;
+	int		i;
+
+	if (!numMeshes)
+		return;
+
+	QGL_LogPrintf("---------- RB_BlendLightPass ----------\n");
+
+	// Set the GL state
+	GL_PolygonMode(GL_FILL);
+
+	GL_Disable(GL_ALPHA_TEST);
+
+	GL_Enable(GL_DEPTH_TEST);
+	GL_DepthFunc(GL_EQUAL);
+
+	GL_Disable(GL_STENCIL_TEST);
+
+	GL_ColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+	GL_DepthMask(GL_FALSE);
+	GL_StencilMask(255);
+
+	// Bind the program
+	GL_BindProgram(rg.blendLightProgram);
+
+	// Clear the batch state
+	backEnd.entity = NULL;
+	backEnd.material = NULL;
+
+	sort = 0;
+
+	// Run through meshes
+	for (i = 0, mesh = meshes; i < numMeshes; i++, mesh++){
+		// Check if the state changed
+		if (mesh->sort != sort){
+			sort = mesh->sort;
+
+			// Draw the last batch
+			RB_RenderBatch();
+
+			// Evaluate registers if needed
+			if (mesh->entity != backEnd.entity || mesh->material != backEnd.material)
+				RB_EvaluateRegisters(mesh->material, backEnd.floatTime, mesh->entity->materialParms);
+
+			// Skip if condition evaluated to false
+			if (!mesh->material->expressionRegisters[mesh->material->conditionRegister]){
+				skip = true;
+				continue;
+			}
+
+			// Set the entity state if needed
+			if (mesh->entity != backEnd.entity){
+				RB_EntityState(mesh->entity);
+
+				// Transform the light for this entity
+				RB_TransformLightForEntity(backEnd.light, mesh->entity);
+			}
+
+			// Create a new batch
+			RB_SetupBatch(mesh->entity, mesh->material, false, false, RB_DrawBlendLight);
+
+			skip = false;
+		}
+
+		if (skip)
+			continue;
+
+		// Batch the surface geometry
+		RB_BatchGeometry(mesh->type, mesh->data);
+	}
+
+	// Draw the last batch
+	RB_RenderBatch();
+
+	// Restore the GL state
+	GL_SelectTexture(0);
+
+	// Unbind the program
+	GL_BindProgram(NULL);
+
+	QGL_LogPrintf("--------------------\n");
+}
+
+/*
+ ==================
+ RB_RenderBlendLights
+ ==================
+*/
+void RB_RenderBlendLights (int numLights, light_t *lights){
+
+	light_t	*light;
+	int		i;
+
+	if (!numLights)
+		return;
+
+	// Development tool
+	if (r_skipBlendLights->integerValue)
+		return;
+
+	QGL_LogPrintf("---------- RB_RenderBlendLights ----------\n");
+
+	// Run through the lights
+	for (i = 0, light = lights; i < numLights; i++, light++){
+		if (!light->numInteractionMeshes)
+			continue;
+
+		// Set the light
+		backEnd.light = light;
+		backEnd.lightMaterial = light->material;
+
+		// Evaluate registers
+		RB_EvaluateRegisters(light->material, backEnd.floatTime, light->materialParms);
+
+		// Skip if condition evaluated to false
+		if (!light->material->expressionRegisters[light->material->conditionRegister])
+			continue;
+
+		// Set up the scissor
+		GL_Scissor(light->scissor);
+
+		// Set up the depth bounds
+		if (glConfig.depthBoundsTestAvailable)
+			GL_DepthBounds(light->depthMin, light->depthMax);
+
+		// Draw the surfaces
+		RB_BlendLightPass(light->numInteractionMeshes, light->interactionMeshes);
+	}
+
+	// Restore the scissor
+	GL_Scissor(backEnd.scissor);
+
+	// Restore the depth bounds
+	if (glConfig.depthBoundsTestAvailable)
+		GL_DepthBounds(0.0f, 1.0f);
+
+	QGL_LogPrintf("--------------------\n");
+}
+
+
+/*
+ ==============================================================================
+
+ FOG LIGHT INTERACTION RENDERING
+
+ ==============================================================================
+*/
+
+
+/*
+ ==================
+ RB_DrawFogLight
+ ==================
+*/
+static void RB_DrawFogLight (){
+
+	stage_t	*stage;
+	vec4_t	color;
+	int		i;
+
+	RB_Cull(backEnd.material);
+	RB_PolygonOffset(backEnd.material);
+
+	// Run through the light stages
+	for (i = 0, stage = backEnd.lightMaterial->stages; i < backEnd.lightMaterial->numStages; i++, stage++){
+		if (!backEnd.lightMaterial->expressionRegisters[stage->conditionRegister])
+			continue;
+
+		// Compute the light matrix
+		RB_ComputeLightMatrix(backEnd.light, backEnd.entity, backEnd.lightMaterial, &stage->textureStage);
+
+		// Compute the light color
+		color[0] = backEnd.lightMaterial->expressionRegisters[stage->colorStage.registers[0]];
+		color[1] = backEnd.lightMaterial->expressionRegisters[stage->colorStage.registers[1]];
+		color[2] = backEnd.lightMaterial->expressionRegisters[stage->colorStage.registers[2]];
+		color[3] = backEnd.lightMaterial->expressionRegisters[stage->colorStage.registers[3]];
+
+		// Set up the program uniforms
+		R_UniformMatrix4(backEnd.fogLightParms.lightMatrix, GL_TRUE, backEnd.localParms.lightMatrix);
+		R_UniformVector4(backEnd.fogLightParms.lightColor, color);
+
+		// Bind the textures
+		GL_BindMultitexture(stage->textureStage.texture, TMU_LIGHTPROJECTION);
+		GL_BindMultitexture(backEnd.lightMaterial->lightFalloffImage, TMU_LIGHTFALLOFF);
+
+		// Draw it
+		RB_DrawElementsWithCounters(&rg.pc.interactionIndices, &rg.pc.interactionVertices);
+	}
+}
+
+/*
+ ==================
+ RB_DrawFogLightPlane
+ ==================
+*/
+static void RB_DrawFogLightPlane (){
+
+	static glIndex_t	indices[6] = {2, 3, 1, 2, 1, 0};
+	stage_t				*stage;
+	vec4_t				color;
+	int					i;
+
+	// Unbind the index buffer
+	GL_BindIndexBuffer(NULL);
+
+	// Unbind the vertex buffer
+	GL_BindVertexBuffer(NULL);
+
+	// Set the GL state
+	GL_PolygonMode(GL_FILL);
+
+	GL_Enable(GL_CULL_FACE);
+	GL_CullFace(GL_BACK);
+
+	GL_Disable(GL_POLYGON_OFFSET_FILL);
+
+	GL_Enable(GL_BLEND);
+	GL_BlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	GL_BlendEquation(GL_FUNC_ADD);
+
+	GL_Disable(GL_ALPHA_TEST);
+
+	GL_Enable(GL_DEPTH_TEST);
+	GL_DepthFunc(GL_LEQUAL);
+
+	GL_Disable(GL_STENCIL_TEST);
+
+	GL_ColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+	GL_DepthMask(GL_FALSE);
+	GL_StencilMask(255);
+
+	// Set the entity state
+	RB_EntityState(rg.worldEntity);
+
+	// Bind the program
+	GL_BindProgram(rg.fogLightProgram);
+
+	// Set up the vertex array
+	qglVertexPointer(3, GL_FLOAT, 0, backEnd.light->data.corners);
+
+	// Run through the light stages
+	for (i = 0, stage = backEnd.lightMaterial->stages; i < backEnd.lightMaterial->numStages; i++, stage++){
+		if (!backEnd.lightMaterial->expressionRegisters[stage->conditionRegister])
+			continue;
+
+		// Compute the light matrix
+		RB_ComputeLightMatrix(backEnd.light, rg.worldEntity, backEnd.lightMaterial, &stage->textureStage);
+
+		// Compute the light color
+		color[0] = backEnd.lightMaterial->expressionRegisters[stage->colorStage.registers[0]];
+		color[1] = backEnd.lightMaterial->expressionRegisters[stage->colorStage.registers[1]];
+		color[2] = backEnd.lightMaterial->expressionRegisters[stage->colorStage.registers[2]];
+		color[3] = backEnd.lightMaterial->expressionRegisters[stage->colorStage.registers[3]];
+
+		// Set up the program uniforms
+		R_UniformMatrix4(backEnd.fogLightParms.lightMatrix, GL_TRUE, backEnd.localParms.lightMatrix);
+		R_UniformVector4(backEnd.fogLightParms.lightColor, color);
+
+		// Bind the textures
+		GL_BindMultitexture(stage->textureStage.texture, TMU_LIGHTPROJECTION);
+		GL_BindMultitexture(backEnd.lightMaterial->lightFalloffImage, TMU_LIGHTFALLOFF);
+
+		// Draw it
+		RB_DrawElementsStaticIndices(8, 6, indices);
+
+		// Check for errors
+		if (!r_ignoreGLErrors->integerValue)
+			GL_CheckForErrors();
+	}
+
+	// Restore the GL state
+	GL_SelectTexture(0);
+
+	// Unbind the program
+	GL_BindProgram(NULL);
+}
+
+/*
+ ==================
+ RB_DrawFogLightVolume
+ ==================
+*/
+static void RB_DrawFogLightVolume (){
+
+	static glIndex_t	indices[36] = {3, 2, 6, 3, 6, 7, 0, 1, 5, 0, 5, 4, 2, 3, 1, 2, 1, 0, 4, 5, 7, 4, 7, 6, 1, 3, 7, 1, 7, 5, 2, 0, 4, 2, 4, 6};
+
+	// Unbind the index buffer
+	GL_BindIndexBuffer(NULL);
+
+	// Unbind the vertex buffer
+	GL_BindVertexBuffer(NULL);
+
+	// Set the GL state
+	GL_LoadMatrix(GL_MODELVIEW, backEnd.viewParms.modelviewMatrix);
+
+	GL_DisableTexture();
+
+	GL_PolygonMode(GL_FILL);
+
+	GL_Disable(GL_CULL_FACE);
+
+	GL_Disable(GL_POLYGON_OFFSET_FILL);
+
+	GL_Disable(GL_BLEND);
+
+	GL_Disable(GL_ALPHA_TEST);
+
+	GL_Enable(GL_DEPTH_TEST);
+	GL_DepthFunc(GL_LEQUAL);
+
+	GL_Enable(GL_STENCIL_TEST);
+	GL_StencilFunc(GL_ALWAYS, 128, 255);
+	GL_StencilOpSeparate(GL_KEEP, GL_KEEP, GL_INCR_WRAP, GL_DECR_WRAP, GL_KEEP, GL_KEEP);
+
+	GL_DepthRange(0.0f, 1.0f);
+
+	GL_ColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
+	GL_DepthMask(GL_FALSE);
+	GL_StencilMask(255);
+
+	// Enable depth clamp
+	qglEnable(GL_DEPTH_CLAMP);
+
+	// Clear the stencil buffer
+	qglClearStencil(128);
+	qglClear(GL_STENCIL_BUFFER_BIT);
+
+	// Set up the vertex array
+	qglVertexPointer(3, GL_FLOAT, 0, backEnd.light->data.corners);
+
+	// Draw it
+	RB_DrawElementsStaticIndices(8, 36, indices);
+
+	// Check for errors
+	if (!r_ignoreGLErrors->integerValue)
+		GL_CheckForErrors();
+
+	// Disable depth clamp
+	qglDisable(GL_DEPTH_CLAMP);
+}
+
+/*
+ ==================
+ RB_FogLightPass
+ ==================
+*/
+static void RB_FogLightPass (int numMeshes, mesh_t *meshes){
+
+	mesh_t	*mesh;
+	uint	sort;
+	bool	skip;
+	int		i;
+
+	if (!numMeshes)
+		return;
+
+	QGL_LogPrintf("---------- RB_FogLightPass ----------\n");
+
+	// Set the GL state
+	GL_PolygonMode(GL_FILL);
+
+	GL_Enable(GL_BLEND);
+	GL_BlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	GL_BlendEquation(GL_FUNC_ADD);
+
+	GL_Disable(GL_ALPHA_TEST);
+
+	GL_Enable(GL_DEPTH_TEST);
+	GL_DepthFunc(GL_EQUAL);
+
+	GL_Enable(GL_STENCIL_TEST);
+	GL_StencilFunc(GL_LESS, 128, 255);
+	GL_StencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+
+	GL_ColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+	GL_DepthMask(GL_FALSE);
+	GL_StencilMask(255);
+
+	// Bind the program
+	GL_BindProgram(rg.fogLightProgram);
+
+	// Clear the batch state
+	backEnd.entity = NULL;
+	backEnd.material = NULL;
+
+	sort = 0;
+
+	// Run through meshes
+	for (i = 0, mesh = meshes; i < numMeshes; i++, mesh++){
+		// Check if the state changed
+		if (mesh->sort != sort){
+			sort = mesh->sort;
+
+			// Draw the last batch
+			RB_RenderBatch();
+
+			// Evaluate registers if needed
+			if (mesh->entity != backEnd.entity || mesh->material != backEnd.material)
+				RB_EvaluateRegisters(mesh->material, backEnd.floatTime, mesh->entity->materialParms);
+
+			// Skip if condition evaluated to false
+			if (!mesh->material->expressionRegisters[mesh->material->conditionRegister]){
+				skip = true;
+				continue;
+			}
+
+			// Set the entity state if needed
+			if (mesh->entity != backEnd.entity){
+				RB_EntityState(mesh->entity);
+
+				// Transform the light for this entity
+				RB_TransformLightForEntity(backEnd.light, mesh->entity);
+			}
+
+			// Create a new batch
+			RB_SetupBatch(mesh->entity, mesh->material, false, false, RB_DrawFogLight);
+
+			skip = false;
+		}
+
+		if (skip)
+			continue;
+
+		// Batch the surface geometry
+		RB_BatchGeometry(mesh->type, mesh->data);
+	}
+
+	// Draw the last batch
+	RB_RenderBatch();
+
+	// Restore the GL state
+	GL_SelectTexture(0);
+
+	// Unbind the program
+	GL_BindProgram(NULL);
+
+	QGL_LogPrintf("--------------------\n");
+}
+
+/*
+ ==================
+ RB_RenderFogLights
+ ==================
+*/
+void RB_RenderFogLights (int numLights, light_t *lights){
+
+	light_t *light;
+	int		i;
+
+	if (!numLights)
+		return;
+
+	// Development tool
+	if (r_skipFogLights->integerValue)
+		return;
+
+	QGL_LogPrintf("---------- RB_RenderFogLights ----------\n");
+
+	// Run through the lights
+	for (i = 0, light = lights; i < numLights; i++, light++){
+		if (!light->numInteractionMeshes){
+			if (!light->fogPlaneVisible)
+				continue;
+		}
+
+		// Set the light
+		backEnd.light = light;
+		backEnd.lightMaterial = light->material;
+
+		// Evaluate registers
+		RB_EvaluateRegisters(light->material, backEnd.floatTime, light->materialParms);
+
+		// Skip if condition evaluated to false
+		if (!light->material->expressionRegisters[light->material->conditionRegister])
+			continue;
+
+		// Set up the scissor
+		GL_Scissor(light->scissor);
+
+		// Set up the depth bounds
+		if (glConfig.depthBoundsTestAvailable)
+			GL_DepthBounds(light->depthMin, light->depthMax);
+
+		// Draw the fog volume to the stencil buffer
+		RB_DrawFogLightVolume();
+
+		// Draw the surfaces
+		RB_FogLightPass(light->numInteractionMeshes, light->interactionMeshes);
+
+		// Draw the fog plane if visible
+		if (!light->fogPlaneVisible)
+			continue;
+
+		RB_DrawFogLightPlane();
+	}
+
+	// Restore the scissor
+	GL_Scissor(backEnd.scissor);
+
+	// Restore the depth bounds
+	if (glConfig.depthBoundsTestAvailable)
+		GL_DepthBounds(0.0f, 1.0f);
+
+	QGL_LogPrintf("--------------------\n");
+}
+
+
+/*
+ ==============================================================================
+
+ BLOOM AND COLOR CORRECTION POST-PROCESSING
+
+ ==============================================================================
+*/
+
+
+/*
+ ==================
+ RB_BloomFilter
+ ==================
+*/
+static void RB_BloomFilter (const postProcessParms_t *postProcessParms, float sScale, float tScale){
+
+	bloomParms_t	*parms;
+
+	// Bind the program
+	GL_BindProgram(rg.bloomProgram);
+
+	// Set up the program uniforms
+	parms = &backEnd.bloomParms;
+
+	R_UniformFloat2(parms->stOffset1, 0.5f * sScale, 0.0f);
+	R_UniformFloat2(parms->stOffset2, 0.0f, 0.5f * tScale);
+	R_UniformFloat2(parms->stOffset3, 0.5f * sScale, 0.5f * tScale);
+	R_UniformFloat(parms->bloomContrast, postProcessParms->bloomContrast);
+	R_UniformFloat(parms->bloomThreshold, postProcessParms->bloomThreshold);
+
+	// Bind the texture
+	GL_BindMultitexture(rg.currentColorTexture, 0);
+
+	// Draw it
+	qglBegin(GL_QUADS);
+	qglVertexAttrib2f(GL_ATTRIB_TEXCOORD, 0.0f, 0.0f);
+	qglVertex2f(-1.0f, -1.0f);
+	qglVertexAttrib2f(GL_ATTRIB_TEXCOORD, 1.0f, 0.0f);
+	qglVertex2f( 1.0f, -1.0f);
+	qglVertexAttrib2f(GL_ATTRIB_TEXCOORD, 1.0f, 1.0f);
+	qglVertex2f( 1.0f,  1.0f);
+	qglVertexAttrib2f(GL_ATTRIB_TEXCOORD, 0.0f, 1.0f);
+	qglVertex2f(-1.0f,  1.0f);
+	qglEnd();
+
+	// Check for errors
+	if (!r_ignoreGLErrors->integerValue)
+		GL_CheckForErrors();
+}
+
+/*
+ ==================
+ RB_BloomBlur
+ ==================
+*/
+static void RB_BloomBlur (const postProcessParms_t *postProcessParms, float sScale, float tScale){
+
+	blurParms_t	*parms;
+
+	// Bind the program
+	GL_BindProgram(rg.blurPrograms[BLUR_17X17]);
+
+	// Set up the program uniforms
+	parms = &backEnd.blurParms[BLUR_17X17];
+
+	R_UniformFloat2(parms->coordScale, sScale, tScale);
+
+	// Bind the texture
+	GL_BindMultitexture(rg.bloomTexture, 0);
+
+	// Draw it
+	qglBegin(GL_QUADS);
+	qglVertexAttrib2f(GL_ATTRIB_TEXCOORD, 0.0f, 0.0f);
+	qglVertex2f(-1.0f, -1.0f);
+	qglVertexAttrib2f(GL_ATTRIB_TEXCOORD, 1.0f, 0.0f);
+	qglVertex2f( 1.0f, -1.0f);
+	qglVertexAttrib2f(GL_ATTRIB_TEXCOORD, 1.0f, 1.0f);
+	qglVertex2f( 1.0f,  1.0f);
+	qglVertexAttrib2f(GL_ATTRIB_TEXCOORD, 0.0f, 1.0f);
+	qglVertex2f(-1.0f,  1.0f);
+	qglEnd();
+
+	// Check for errors
+	if (!r_ignoreGLErrors->integerValue)
+		GL_CheckForErrors();
+}
+
+/*
+ ==================
+ RB_ColorCorrection
+ ==================
+*/
+static void RB_ColorCorrection (const postProcessParms_t *postProcessParms){
+
+	colorCorrectionParms_t	*parms;
+
+	// Bind the program
+	GL_BindProgram(rg.colorCorrectionProgram);
+
+	// Set up the program uniforms
+	parms = &backEnd.colorCorrectionParms;
+
+	R_UniformFloat(parms->baseIntensity, postProcessParms->baseIntensity);
+	R_UniformFloat(parms->glowIntensity, postProcessParms->glowIntensity);
+	R_UniformVector3(parms->colorShadows, postProcessParms->colorShadows);
+	R_UniformVector3(parms->colorHighlights, postProcessParms->colorHighlights);
+	R_UniformVector3(parms->colorMidtones, postProcessParms->colorMidtones);
+	R_UniformVector3(parms->colorMinOutput, postProcessParms->colorMinOutput);
+	R_UniformVector3(parms->colorMaxOutput, postProcessParms->colorMaxOutput);
+	R_UniformVector3(parms->colorSaturation, postProcessParms->colorSaturation);
+	R_UniformVector3(parms->colorTint, postProcessParms->colorTint);
+
+	// Bind the textures
+	if (r_showBloom->integerValue)
+		GL_BindMultitexture(rg.blackTexture, 0);
+	else
+		GL_BindMultitexture(rg.currentColorTexture, 0);
+
+	if (r_bloom->integerValue)
+		GL_BindMultitexture(rg.bloomTexture, 1);
+	else
+		GL_BindMultitexture(rg.blackTexture, 1);
+
+	GL_BindMultitexture(rg.colorTableTexture, 2);
+
+	// Draw it
+	qglBegin(GL_QUADS);
+	qglVertexAttrib2f(GL_ATTRIB_TEXCOORD, 0.0f, 0.0f);
+	qglVertex2f(-1.0f, -1.0f);
+	qglVertexAttrib2f(GL_ATTRIB_TEXCOORD, 1.0f, 0.0f);
+	qglVertex2f( 1.0f, -1.0f);
+	qglVertexAttrib2f(GL_ATTRIB_TEXCOORD, 1.0f, 1.0f);
+	qglVertex2f( 1.0f,  1.0f);
+	qglVertexAttrib2f(GL_ATTRIB_TEXCOORD, 0.0f, 1.0f);
+	qglVertex2f(-1.0f,  1.0f);
+	qglEnd();
+
+	// Check for errors
+	if (!r_ignoreGLErrors->integerValue)
+		GL_CheckForErrors();
+}
+
+/*
+ ==================
+ RB_PostProcess
+ ==================
+*/
+void RB_PostProcess (const postProcessParms_t *postProcessParms){
+
+	rect_t	rect;
+	float	sScale, tScale;
+
+	if (!r_postProcess->integerValue || rg.envShotRendering)
+		return;
+
+	if (!backEnd.viewParms.primaryView || backEnd.viewParms.viewType != VIEW_MAIN)
+		return;
+
+	QGL_LogPrintf("---------- RB_PostProcess ----------\n");
+
+	// Unbind the index buffer
+	GL_BindIndexBuffer(NULL);
+
+	// Unbind the vertex buffer
+	GL_BindVertexBuffer(NULL);
+
+	// Set the GL state
+	GL_LoadIdentity(GL_PROJECTION);
+	GL_LoadIdentity(GL_MODELVIEW);
+
+	GL_PolygonMode(GL_FILL);
+
+	GL_Disable(GL_CULL_FACE);
+	GL_Disable(GL_POLYGON_OFFSET_FILL);
+	GL_Disable(GL_BLEND);
+	GL_Disable(GL_ALPHA_TEST);
+	GL_Disable(GL_DEPTH_TEST);
+	GL_Disable(GL_STENCIL_TEST);
+
+	GL_DepthRange(0.0f, 1.0f);
+
+	GL_ColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+	GL_DepthMask(GL_FALSE);
+	GL_StencilMask(0);
+
+	// Capture framebuffer
+	R_CopyFramebufferToTexture(rg.currentColorTexture, 0, backEnd.viewport.x, backEnd.viewport.y, backEnd.viewport.width, backEnd.viewport.height);
+
+	// Perform bloom post-processing if desired
+	if (r_bloom->integerValue){
+		rect.x = 0;
+		rect.y = 0;
+		rect.width = Max(backEnd.viewport.width >> 2, 1);
+		rect.height = Max(backEnd.viewport.height >> 2, 1);
+
+		sScale = 1.0f / rect.width;
+		tScale = 1.0f / rect.height;
+
+		// Set up the viewport
+		GL_Viewport(rect);
+
+		// Set up the scissor
+		GL_Scissor(rect);
+
+		// Downsample and filter out dark pixels
+		RB_BloomFilter(postProcessParms, sScale, tScale);
+
+		// Capture framebuffer
+		R_CopyFramebufferToTexture(rg.bloomTexture, 0, rect.x, rect.y, rect.width, rect.height);
+
+		// Blur horizontally
+		RB_BloomBlur(postProcessParms, sScale, 0.0f);
+
+		// Capture framebuffer
+		R_CopyFramebufferToTexture(rg.bloomTexture, 0, rect.x, rect.y, rect.width, rect.height);
+
+		// Blur vertically
+		RB_BloomBlur(postProcessParms, 0.0f, tScale);
+
+		// Capture framebuffer
+		R_CopyFramebufferToTexture(rg.bloomTexture, 0, rect.x, rect.y, rect.width, rect.height);
+
+		// Restore the viewport
+		GL_Viewport(backEnd.viewport);
+
+		// Restore the scissor
+		GL_Scissor(backEnd.scissor);
+	}
+
+	// Draw the final post-processed image
+	RB_ColorCorrection(postProcessParms);
+
+	// Restore the GL state
+	GL_LoadMatrix(GL_PROJECTION, backEnd.viewParms.projectionMatrix);
+
+	GL_SelectTexture(0);
+
+	// Unbind the program
+	GL_BindProgram(NULL);
+
+	QGL_LogPrintf("--------------------\n");
+}
+
+
+/*
+ ==============================================================================
+
+ 2D RENDERING
+
+ ==============================================================================
+*/
+
+
+/*
+ ==================
+ RB_DrawMaterial2D
+ ==================
+*/
+void RB_DrawMaterial2D (){
+
+	stage_t	*stage;
+	int		i;
+
+	QGL_LogPrintf("----- RB_DrawMaterial2D ( %s ) -----\n", backEnd.material->name);
+
+	for (i = 0, stage = backEnd.material->stages; i < backEnd.material->numStages; i++, stage++){
+		if (stage->lighting != SL_AMBIENT)
+			continue;
+
+		if (!backEnd.material->expressionRegisters[stage->conditionRegister])
+			continue;
+
+		// Special case for custom shaders
+		if (stage->shaderStage.program){
+			if (r_skipShaders->integerValue)
+				continue;
+
+			RB_DrawState(backEnd.material, stage);
+
+			RB_SetupShaderStage(backEnd.material, &stage->shaderStage);
+
+			RB_DrawElements();
+
+			RB_CleanupShaderStage(backEnd.material, &stage->shaderStage);
+
+			continue;
+		}
+
+		// General case
+		RB_DrawState(backEnd.material, stage);
+
+		RB_SetupTextureStage(backEnd.material, &stage->textureStage);
+		RB_SetupColorStage(backEnd.material, &stage->colorStage);
+
+		RB_DrawElements();
+
+		RB_CleanupColorStage(backEnd.material, &stage->colorStage);
+		RB_CleanupTextureStage(backEnd.material, &stage->textureStage);
+	}
+
+	QGL_LogPrintf("--------------------\n");
+}
